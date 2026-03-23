@@ -17,5 +17,5 @@ jobs:
        password: ${{ secrets.PASSWORD }}
        script: |
          cd /var/www/html
-         git pull origin main
+         git pull origin main || git clone https://github.com/Sai-sishith09/devops-newprojectt.git .
          sudo systemctl restart nginx
