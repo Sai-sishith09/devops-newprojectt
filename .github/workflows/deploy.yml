@@ -1,0 +1,21 @@
+name: Deploy website
+on:
+  push:
+   branches:
+    -main
+jobs:
+  deploy:
+   run-on: ubuntu-latest
+   steps:
+   - name: checkout code
+     uses: actions/checkout@v3
+   - name: Deploy to server
+     uses: appleboy/ssh-action@v0.1.6
+     with:
+       host: ${{ secrets.HOST}}
+       username: ${{ secrets.USERNAME }}
+       password: ${{ secrets.PASSWORD }}
+       script: |
+         cd /var/www/html
+         git pull origin main
+         sudo systemctl restart nginx
