@@ -1,21 +1,28 @@
 name: Deploy website
 on:
-  push:
-   branches:
-    -main
+push:
+branches:
+-main
 jobs:
-  deploy:
-   runs-on: ubuntu-latest
-   steps:
-   - name: checkout code
-     uses: actions/checkout@v3
-   - name: Deploy to server
-     uses: appleboy/ssh-action@v0.1.6
-     with:
-       host: ${{ secrets.HOST}}
-       username: ${{ secrets.USERNAME }}
-       password: ${{ secrets.PASSWORD }}
+deploy:
+runs-on: ubuntu-latest
+steps:
+  - name: checkout code
+    uses: actions/checkout@v3
+  - name: Deploy to server
+    uses: appleboy/ssh-action@v0.1.6
+    with:
+       host: ${{ secrets.SERVER_ID}}
+       username: ${{ secrets.SERVER_USER }}
+       key: ${{ secrets.SERVER_SSH_KEY }}
        script: |
          cd /var/www/html
-         git pull origin main || git clone https://github.com/Sai-sishith09/devops-newprojectt.git .
+         if [ -d "devops-projectt" ]; then
+         cd devops-newprojectt
+         git pull origin main 
+         else
+           git clone https://github.com/Sai-sishith09/devops-newprojectt.git
+         fi
+         sudo chown -R www-data:www-data /var/www/htmlM
+         sudo chmod -R 755 /var/www/html
          sudo systemctl restart nginx
